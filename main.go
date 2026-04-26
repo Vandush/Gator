@@ -2,14 +2,30 @@ package main
 
 import (
 	"fmt"
-//	"os"
+	"os"
 	"github.com/Vandush/Gator/internal/config"
 )
 
 func main() {
-	conf, _ := config.Read()
-	conf.SetUser("Vandush")
-	fmt.Printf("%v", conf)
-//	data, _ := os.ReadFile(config.ConfigPath())
-//	fmt.Println(string(data))
+	s := config.State{}
+	c, _ := config.Read()
+	s.Conf = &c
+	cmds := config.Commands{}
+	cmds.Make()
+	cmds.Register("login", config.HandlerLogin)
+	args := os.Args[1:]
+	if len(args) < 1 {
+		fmt.Println("No command given.")
+		os.Exit(1)
+	}
+	command := config.Command{
+		Name: args[0],
+		Arguments: args[1:],
+	}
+	if err := cmds.Run(&s, command); err != nil {
+		fmt.Printf("Error: %v", err)
+		os.Exit(1)
+	}
+	os.Exit(0)
+	//	conf.SetUser("Vandush")
 }

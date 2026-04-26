@@ -21,17 +21,18 @@ func ConfigPath() string {
 	return path
 }
 
-func (c Config) SetUser(user string) {
+func (c Config) SetUser(user string) error {
+	c.DbURL = "postgres://example"
 	c.CurrentUserName = user
 	data, err := json.Marshal(c)
 	if err != nil {
-		fmt.Printf("Marshal Error: %v", err)
-		return
+		return fmt.Errorf("Marshal Error: %v", err)
 	}
 	path := ConfigPath()
 	if err := os.WriteFile(path, data, 0666); err != nil {
-		fmt.Printf("WriteFile Error: %v", err)
+		return fmt.Errorf("WriteFile Error: %v", err)
 	}
+	return nil
 }
 
 func Read() (Config, error) {
