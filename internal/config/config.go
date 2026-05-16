@@ -22,7 +22,8 @@ func ConfigPath() string {
 }
 
 func (c Config) SetUser(user string) error {
-	c.DbURL = "postgres://example"
+//	c.DbURL = "postgres://example"
+	c.DbURL = "postgres://postgres:postgres@localhost:5432/gator"
 	c.CurrentUserName = user
 	data, err := json.Marshal(c)
 	if err != nil {

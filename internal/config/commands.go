@@ -2,9 +2,11 @@ package config
 
 import (
 	"fmt"
+	"github.com/Vandush/Gator/internal/database"
 )
 
 type State struct {
+	Db *database.Queries
 	Conf *Config
 }
 
