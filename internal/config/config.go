@@ -1,13 +1,14 @@
+// Package config manages the state and commands.
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
-	"encoding/json"
 )
 
 type Config struct {
-	DbURL           string `json:"db_url"`
+	DBURL           string `json:"db_url"`
 	CurrentUserName string `json:"current_user_name"`
 }
 
@@ -22,15 +23,13 @@ func ConfigPath() string {
 }
 
 func (c Config) SetUser(user string) error {
-//	c.DbURL = "postgres://example"
-	c.DbURL = "postgres://postgres:postgres@localhost:5432/gator"
 	c.CurrentUserName = user
 	data, err := json.Marshal(c)
 	if err != nil {
-		return fmt.Errorf("Marshal Error: %v", err)
+		return fmt.Errorf("marshal Error: %v", err)
 	}
 	path := ConfigPath()
-	if err := os.WriteFile(path, data, 0666); err != nil {
+	if err := os.WriteFile(path, data, 0o666); err != nil {
 		return fmt.Errorf("WriteFile Error: %v", err)
 	}
 	return nil
