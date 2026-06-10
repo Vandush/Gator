@@ -29,6 +29,8 @@ func main() {
 	cmds.Make()
 	cmds.Register("login", config.HandlerLogin)
 	cmds.Register("register", config.HandlerRegister)
+	cmds.Register("reset", config.HandlerResetUsers)
+	cmds.Register("users", config.HandlerListUsers)
 
 	args := os.Args[1:]
 	if len(args) < 1 {

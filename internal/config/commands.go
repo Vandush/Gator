@@ -82,6 +82,45 @@ func HandlerRegister(s *State, cmd Command) error {
 	return nil
 }
 
+func HandlerResetUsers(s *State, cmd Command) error {
+	if len(cmd.Arguments) > 0 {
+		return fmt.Errorf("'reset' does not take arguments")
+	}
+
+	ctx := context.Background()
+
+	if err := s.DB.DropUserTable(ctx); err != nil {
+		return err
+	}
+
+	if err := s.DB.CreateUserTable(ctx); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func HandlerListUsers(s *State, cmd Command) error {
+	if len(cmd.Arguments) > 0 {
+		return fmt.Errorf("'users' does not take arguments")
+	}
+
+	ctx := context.Background()
+	users, err := s.DB.GetUsers(ctx)
+	if err != nil {
+		return err
+	}
+
+	for i := range len(users) {
+		if users[i] == s.Conf.CurrentUserName {
+			fmt.Printf("%v (current)\n", users[i])
+		} else {
+			fmt.Printf("%v\n", users[i])
+		}
+	}
+	return nil
+}
+
 type Commands struct {
 	commands map[string]func(*State, Command) error
 }
